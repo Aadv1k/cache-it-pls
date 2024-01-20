@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Cache it pls! | {% block title %}Home{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+
+    <link href="{% static 'core/vendor/bulma/css/bulma.min.css' %}" rel="stylesheet"/>
+  </head>
+
+  <body>
+    <div class="container">
+        {% block body %}
+        {% endblock body %}
+    </div>
+  </body>
+</html>

@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import User, CacheJob, CacheItem
+
+admin.site.register(User)
+admin.site.register(CacheJob)
+admin.site.register(CacheItem)
