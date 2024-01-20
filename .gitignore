@@ -2,9 +2,6 @@
 */**/__pycache__
 
 
-# NOTE: This is temporary
-*/**/vendor/
-
 *.sqlite3
 
 env/
