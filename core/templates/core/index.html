@@ -1,8 +1,78 @@
 {% extends "core/layout.html" %}
 {% load static %}
 
-
 {% block body %}
+<section class="hero is-medium">
+  <div class="hero-body container has-text-centered">
+    <p class="title is-size-2 has-text-weight-bold mb-5">
+Dead Simple Caching for your dynamic APIs
+    </p>
+    <p class="subtitle">
+      turn your rate-limited, dynamic APIs into unlimited* cached APIs
+    </p>
+  </div>
+</section>
+
+<section class="container is-max-desktop my-4">
+  <h2 class="is-size-3 has-text-centered">Features</h2>
+
+  <div class="columns is-multiline is-desktop is-mobile my-2 is-variable is-2" style="gap: 0.75rem; width: 90%; margin: 0 auto;">
+
+    <div class="card column is-full-mobile ">
+      <header class="card-header">
+        <p class="card-header-title">
+          Meta
+        </p>
+        <div class="card-header-icon">
+          <span class="icon is-size-4">
+            <i class="bi bi-database-fill" aria-hidden="true"></i>
+          </span>
+        </div>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          Get access to the cache history and frequency through API
+        </div>
+      </div>
+    </div>
+
+    <div class="card column is-full-mobile">
+      <header class="card-header">
+        <p class="card-header-title">
+          Upto 1M+ Calls (TBD)
+        </p>
+        <div class="card-header-icon">
+          <span class="icon is-size-4">
+            <i class="bi bi-database-fill" aria-hidden="true"></i>
+          </span>
+        </div>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          Through caching you can make upto a million calls a minute
+        </div>
+      </div>
+    </div>
+
+    <div class="card column is-full-mobile">
+      <header class="card-header">
+        <p class="card-header-title">
+          Free! Forever
+        </p>
+        <div class="card-header-icon">
+          <span class="icon is-size-4">
+            <i class="bi bi-database-fill" aria-hidden="true"></i>
+          </span>
+        </div>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          Cache it pls! aims to be a completely FOSS service
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 {% endblock body %}
-
