@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 
 from django.contrib.auth import login, logout
@@ -9,7 +9,7 @@ import requests
 
 from django.conf import settings
 
-from .models import CustomUser
+from .models import CustomUser, CacheJob
 
 def index(request):
     return render(request, "core/index.html")
@@ -80,3 +80,26 @@ def oauth_google_callback(request):
         login(request, new_user)
 
     return HttpResponseRedirect(reverse("dashboard"))
+
+@login_required
+def api_job(request):
+    if request.method != "POST":
+        return JsonResponse({'error': 'Invalid method'}, status=405) 
+
+    url = request.POST.get("url", "")
+    time_int = request.POST.get("time_int", "")
+    time_frame = request.POST.get("time_frame", "")
+
+
+    try:
+        res = requests.get(url)
+        res.raise_for_status() 
+    except requests.RequestException as e:
+        return JsonResponse({'error': f'Request to {url} failed: {e}'}, status=500)
+
+    if res.headers["Content-Type"] != "application/json":
+        return JsonResponse({'error': 'Invalid Content-Type'}, status=415) 
+
+    cache_job = CacheJob.objects.create(url=url, time_int=time_int, time_frame=time_frame)
+
+    return JsonResponse({'message': 'Job created successfully', 'job_id': cache_job.id})

@@ -54,33 +54,35 @@
             </div>
           </div>
 
-      <div class="field">
-        <label class="label">Cache every</label>
-        <div class="field has-addons">
-          <div class="control">
-            <div class="select">
-              <select>
-                <option>1</option>
-                <option>5</option>
-                <option>10</option>
-                <option>15</option>
-                <option>60</option>
-              </select>
+          <div class="field">
+            <label class="label">Cache every</label>
+            <div class="field has-addons">
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option>1</option>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>60</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option value="minutes">minutes</option>
+                    <option value="hours">hours</option>
+                    <option value="days">days</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="control">
-            <div class="select">
-              <select>
-                <option value="minutes">minutes</option>
-                <option value="hours">hours</option>
-                <option value="days">days</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
 
-        <button type="submit" id="editModalFormSubmitButton" style="visibility: hidden;"/> </button>
+          <button type="submit" id="editModalFormSubmitButton" style="visibility: hidden;"></button>
+
+        </form>
 
       </section>
 
@@ -91,37 +93,46 @@
     </div>
   </div>
 
+  <!-- Notification for Error -->
+  <div class="notification is-danger" id="errorNotification" style="display: none;">
+    <button class="delete" onclick="closeErrorNotification()"></button>
+    An error occurred. Please check your input and try again.
+  </div>
+
   <script>
     function handleEditModalFormSubmit(event) {
       event.preventDefault();
-      const elem = event.target
+      const elem = event.target;
 
-      const [timeNumeral, timeFrame] = Array.from(elem.querySelectorAll("select")).map(e => e.value)
+      const [timeNumeral, timeFrame] = Array.from(elem.querySelectorAll("select")).map(e => e.value);
       const rawURL = elem.querySelector("input").value;
 
-      const parsedURL = null;
+      let parsedURL;
 
       try {
-        parsedURL = new URL(rawURL)
+        parsedURL = new URL(rawURL);
       } catch {
-        // Show an error toast or something
+        showErrorNotification();
+        return;
       }
 
+      // Assuming fetch is successful for demonstration purposes
       fetch("/api/job/", {
         method: "POST",
         body: JSON.stringify({
-          time: {
-            "numeral": timeNumeral,
-            "frame": timeFrame
-          },
-          url: {
-            body: parsedURL.origin + parsedURL.pathname,
-            "query_params": Object.fromEntries(parsedURL.searchParams)
-          }
+          "time_int": timeNumeral,
+          "time_frame": timeFrame,
+          "url": parsedURL.href
         })
-      })
-
-      closeEditModal();
+      }).then(response => {
+        if (!response.ok) {
+          // If the server returns an error, show an error toast
+          showErrorNotification();
+        } else {
+          // If successful, close the modal
+          closeEditModal();
+        }
+      });
     }
 
     const editModal = document.getElementById("editModal");
@@ -138,6 +149,17 @@
 
     function showDeleteModal() {
       alert("TBD");
+    }
+
+    // Functions for error notification
+    function showErrorNotification() {
+      const errorNotification = document.getElementById("errorNotification");
+      errorNotification.style.display = "block";
+    }
+
+    function closeErrorNotification() {
+      const errorNotification = document.getElementById("errorNotification");
+      errorNotification.style.display = "none";
     }
   </script>
 

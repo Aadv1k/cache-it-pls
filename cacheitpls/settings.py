@@ -7,6 +7,7 @@ from warnings import warn
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 SECRET_KEY = 'django-insecure-1_5^4-mv1j5uka0p!5958lp8dy7$a@_7k8(&+u6k$q_$h7*#c9'
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -102,3 +103,6 @@ GOOGLE_OAUTH_USER_PROFILE = "https://www.googleapis.com/oauth2/v1/userinfo"
 
 GOOGLE_OAUTH_TOKEN_URI =  "https://oauth2.googleapis.com/token"
 GOOGLE_OAUTH_AUTH_URI =  "https://accounts.google.com/o/oauth2/auth"
+
+
+TIME_UNITS = ('minutes', 'hours', 'days')

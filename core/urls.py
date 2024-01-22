@@ -12,4 +12,6 @@ urlpatterns = [
     path("dashboard/", view=dashboard, name="dashboard"),
     path("logout/", view=logout, name="logout_user"),
 
+    path("/api/job", view=api_job, name="api_job")
+
 ]
