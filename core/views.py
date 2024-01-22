@@ -7,7 +7,7 @@ import requests
 
 from django.conf import settings
 
-from .models import User
+from .models import CustomUser
 
 def index(request):
     return render(request, "core/index.html")
@@ -22,12 +22,6 @@ def oauth_google(request):
     ])
 
     return redirect(google_auth_url)
-
-import requests
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.conf import settings
 
 def oauth_google_callback(request):
     if request.method != "GET":
@@ -67,10 +61,10 @@ def oauth_google_callback(request):
     user_username = user_data.get("given_name")
 
     try:
-        found_user = User.objects.get(email=user_email)
+        found_user = CustomUser.objects.get(email=user_email)
         login(request, found_user)
         return HttpResponse(f"Welcome back! {found_user.username}")
-    except User.DoesNotExist:
-        new_user = User.objects.create(email=user_email, username=user_username)
+    except CustomUser.DoesNotExist:
+        new_user = CustomUser.objects.create(email=user_email, username=user_username)
         login(request, new_user)
         return HttpResponse("Successfully obtained user credentials", status=200)
