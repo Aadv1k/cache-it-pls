@@ -1,8 +1,8 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
-
-import uuid
 
 class User(AbstractUser):
     pass
