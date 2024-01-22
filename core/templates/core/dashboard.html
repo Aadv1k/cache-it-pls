@@ -1,0 +1,146 @@
+{% extends 'core/layout.html' %}
+
+{% block body %}
+
+<div class="container px-3">
+
+  <div class="my-2 is-flex is-justify-content-space-between is-align-items-center">
+    <h1 class="is-size-3">Welcome, {{ user.username }}!</h1>
+
+    <button class="button is-primary" onclick="showEditModal()">
+      <span class="icon">
+        <i class="bi bi-plus-lg"></i>
+      </span>
+      <p>Create Job</p>
+    </button>
+
+  </div>
+
+  <table class="table is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>Cache Frequency</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>https://example2.com</td>
+        <td>Weekly</td>
+        <td>
+          <button class="button is-primary" data-id="123" onclick="showEditModal(event)">Edit</button>
+          <button class="button is-danger" data-id="123" onclick="showDeleteModal(event)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="modal is-active" id="editModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">New Job</p>
+        <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
+      </header>
+      <section class="modal-card-body">
+
+        <form id="editModalForm" action="" onsubmit="handleEditModalFormSubmit(event)" action="">
+
+          <div class="field">
+            <label class="label">URL(*)</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Enter URL..." required>
+            </div>
+          </div>
+
+      <div class="field">
+        <label class="label">Cache every</label>
+        <div class="field has-addons">
+          <div class="control">
+            <div class="select">
+              <select>
+                <option>1</option>
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>60</option>
+              </select>
+            </div>
+          </div>
+          <div class="control">
+            <div class="select">
+              <select>
+                <option value="minutes">minutes</option>
+                <option value="hours">hours</option>
+                <option value="days">days</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <button type="submit" id="editModalFormSubmitButton" style="visibility: hidden;"/> </button>
+
+      </section>
+
+      <footer class="modal-card-foot">
+        <button class="button is-success" id="doneBtn">Done</button>
+        <button class="button" id="cancelBtn" onclick="closeEditModal()">Cancel</button>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    function handleEditModalFormSubmit(event) {
+      event.preventDefault();
+      const elem = event.target
+
+      const [timeNumeral, timeFrame] = Array.from(elem.querySelectorAll("select")).map(e => e.value)
+      const rawURL = elem.querySelector("input").value;
+
+      const parsedURL = null;
+
+      try {
+        parsedURL = new URL(rawURL)
+      } catch {
+        // Show an error toast or something
+      }
+
+      fetch("/api/job/", {
+        method: "POST",
+        body: JSON.stringify({
+          time: {
+            "numeral": timeNumeral,
+            "frame": timeFrame
+          },
+          url: {
+            body: parsedURL.origin + parsedURL.pathname,
+            "query_params": Object.fromEntries(parsedURL.searchParams)
+          }
+        })
+      })
+
+      closeEditModal();
+    }
+
+    const editModal = document.getElementById("editModal");
+    const editModalForm = document.getElementById("editModalForm");
+    const doneBtn = document.getElementById("doneBtn");
+
+    function closeEditModal() {
+      editModal.classList.remove("is-active");
+    }
+
+    function showEditModal(event, isNew) {
+      editModal.classList.add("is-active");
+    }
+
+    function showDeleteModal() {
+      alert("TBD");
+    }
+  </script>
+
+</div>
+
+{% endblock body %}

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 import requests
 
@@ -11,6 +13,16 @@ from .models import CustomUser
 
 def index(request):
     return render(request, "core/index.html")
+
+@login_required
+def dashboard(request):
+    return render(request, "core/dashboard.html")
+
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return HttpResponseRedirect(reverse("index"))
+        
 
 def oauth_google(request):
     google_auth_url = "".join([
@@ -63,8 +75,8 @@ def oauth_google_callback(request):
     try:
         found_user = CustomUser.objects.get(email=user_email)
         login(request, found_user)
-        return HttpResponse(f"Welcome back! {found_user.username}")
     except CustomUser.DoesNotExist:
         new_user = CustomUser.objects.create(email=user_email, username=user_username)
         login(request, new_user)
-        return HttpResponse("Successfully obtained user credentials", status=200)
+
+    return HttpResponseRedirect(reverse("dashboard"))
