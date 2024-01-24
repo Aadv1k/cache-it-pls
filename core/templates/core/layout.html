@@ -14,11 +14,17 @@
 
 <body class="container">
   {% block nav %}
-  <nav class="is-flex navbar is-align-items-center is-justify-content-space-between is-transparent" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item is-size-5 has-text-weight-semibold" href="{% url 'index' %}">Cache it pls!</a>
-    </div>
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item is-size-5 has-text-weight-semibold" href="{% url 'index' %}">Cache it pls!</a>
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
 
+  <div id="navbarMenu" class="navbar-menu" style="background-color: transparent;">
     <div class="navbar-end">
       <div class="navbar-item">
         {% if user.is_authenticated %}
@@ -29,14 +35,34 @@
         {% else %}
         <a class="button is-primary is-dark" href="{% url 'oauth_google' %}">
           <span class="icon is-small">
-            <img alt="google" class="image is-16x16" src="{% static 'core/google-color-icon.svg' %}"/>
+            <img alt="google" class="image is-16x16" src="{% static 'core/google-color-icon.svg' %}" />
           </span>
           <p>Continue with Google</p>
         </a>
         {% endif %}
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    if ($navbarBurgers.length > 0) {
+      $navbarBurgers.forEach(function ($el) {
+        $el.addEventListener('click', function () {
+          const target = $el.dataset.target;
+          const $target = document.getElementById(target);
+
+          $el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+</script>
+
+
   {% endblock nav %}
 
   <div class="container">
