@@ -5,6 +5,9 @@ from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
+
+import json 
+
 import requests
 
 from django.conf import settings
@@ -82,20 +85,27 @@ def oauth_google_callback(request):
     return HttpResponseRedirect(reverse("dashboard"))
 
 @login_required
-def api_job(request):
+def api_ep_job(request):
     if request.method != "POST":
         return JsonResponse({'error': 'Invalid method'}, status=405) 
 
-    url = request.POST.get("url", "")
-    time_int = request.POST.get("time_int", "")
-    time_frame = request.POST.get("time_frame", "")
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
+    url = data.get("url")
+    time_int = data.get("time_int")
+    time_frame = data.get("time_frame")
+
+    if not all((time_int, time_frame, url)):
+        return JsonResponse({'error': "Bad input"}, status=400)
 
     try:
         res = requests.get(url)
         res.raise_for_status() 
     except requests.RequestException as e:
-        return JsonResponse({'error': f'Request to {url} failed: {e}'}, status=500)
+        return JsonResponse({'error': f'Request to {url} failed: {e}. Check to provide a different, valid URL'}, status=403)
 
     if res.headers["Content-Type"] != "application/json":
         return JsonResponse({'error': 'Invalid Content-Type'}, status=415) 

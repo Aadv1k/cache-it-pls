@@ -1,13 +1,15 @@
 {% extends 'core/layout.html' %}
+{% load static %}
 
 {% block body %}
 
-<div class="container px-3">
+<script src="{% static 'core/dashboard.js' %}" defer></script>
 
+<div class="container px-3">
   <div class="my-2 is-flex is-justify-content-space-between is-align-items-center">
     <h1 class="is-size-3">Welcome, {{ user.username }}!</h1>
 
-    <button class="button is-primary" onclick="showEditModal()">
+    <button class="button is-primary" id="createJobBtn">
       <span class="icon">
         <i class="bi bi-plus-lg"></i>
       </span>
@@ -29,8 +31,8 @@
         <td>https://example2.com</td>
         <td>Weekly</td>
         <td>
-          <button class="button is-primary" data-id="123" onclick="showEditModal(event)">Edit</button>
-          <button class="button is-danger" data-id="123" onclick="showDeleteModal(event)">Delete</button>
+          <button class="button is-primary" data-id="123">Edit</button>
+          <button class="button is-danger" data-id="123">Delete</button>
         </td>
       </tr>
     </tbody>
@@ -41,11 +43,11 @@
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">New Job</p>
-        <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
+        <button class="delete" aria-label="close"></button>
       </header>
       <section class="modal-card-body">
-
-        <form id="editModalForm" action="" onsubmit="handleEditModalFormSubmit(event)" action="">
+        <form id="editModalForm" action="">
+          {% csrf_token %}
 
           <div class="field">
             <label class="label">URL(*)</label>
@@ -88,80 +90,15 @@
 
       <footer class="modal-card-foot">
         <button class="button is-success" id="doneBtn">Done</button>
-        <button class="button" id="cancelBtn" onclick="closeEditModal()">Cancel</button>
+        <button class="button" id="cancelBtn">Cancel</button>
       </footer>
     </div>
   </div>
 
-  <!-- Notification for Error -->
   <div class="notification is-danger" id="errorNotification" style="display: none;">
-    <button class="delete" onclick="closeErrorNotification()"></button>
+    <button class="delete"></button>
     An error occurred. Please check your input and try again.
   </div>
-
-  <script>
-    function handleEditModalFormSubmit(event) {
-      event.preventDefault();
-      const elem = event.target;
-
-      const [timeNumeral, timeFrame] = Array.from(elem.querySelectorAll("select")).map(e => e.value);
-      const rawURL = elem.querySelector("input").value;
-
-      let parsedURL;
-
-      try {
-        parsedURL = new URL(rawURL);
-      } catch {
-        showErrorNotification();
-        return;
-      }
-
-      // Assuming fetch is successful for demonstration purposes
-      fetch("/api/job/", {
-        method: "POST",
-        body: JSON.stringify({
-          "time_int": timeNumeral,
-          "time_frame": timeFrame,
-          "url": parsedURL.href
-        })
-      }).then(response => {
-        if (!response.ok) {
-          // If the server returns an error, show an error toast
-          showErrorNotification();
-        } else {
-          // If successful, close the modal
-          closeEditModal();
-        }
-      });
-    }
-
-    const editModal = document.getElementById("editModal");
-    const editModalForm = document.getElementById("editModalForm");
-    const doneBtn = document.getElementById("doneBtn");
-
-    function closeEditModal() {
-      editModal.classList.remove("is-active");
-    }
-
-    function showEditModal(event, isNew) {
-      editModal.classList.add("is-active");
-    }
-
-    function showDeleteModal() {
-      alert("TBD");
-    }
-
-    // Functions for error notification
-    function showErrorNotification() {
-      const errorNotification = document.getElementById("errorNotification");
-      errorNotification.style.display = "block";
-    }
-
-    function closeErrorNotification() {
-      const errorNotification = document.getElementById("errorNotification");
-      errorNotification.style.display = "none";
-    }
-  </script>
 
 </div>
 
