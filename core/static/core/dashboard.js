@@ -8,6 +8,14 @@ const deleteDoneBtn = document.getElementById("deleteDoneBtn");
 const deleteCancelBtn = document.getElementById("deleteCancelBtn");
 const csrfToken = getCSRFToken();
 
+document.querySelectorAll("#copyBtn").forEach(elem => {
+    elem.addEventListener("click", async (event) => {
+        const origin = (new URL(document.URL)).origin
+        const url = `${origin}${event.target.dataset.url}`
+        await navigator.clipboard.writeText(url);
+    })
+})
+
 createJobBtn.addEventListener("click", showEditModal);
 cancelBtn.addEventListener("click", closeEditModal);
 editModalForm.addEventListener("submit", handleEditModalFormSubmit);
@@ -99,4 +107,8 @@ function closeErrorNotification() {
 function getCSRFToken() {
     const csrfCookie = document.cookie.match(/csrftoken=([^ ;]*)/);
     return csrfCookie ? csrfCookie[1] : null;
+}
+
+function copy() {
+    console.log(event)
 }

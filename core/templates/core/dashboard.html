@@ -16,7 +16,9 @@
     </button>
   </div>
 
-  <table class="table is-fullwidth is-bordered">
+  <div class="table-container">
+
+  <table class="table is-fullwidth is-bordered is-narrow">
     <thead>
       <tr>
         <th>URL</th>
@@ -30,12 +32,15 @@
           <td>{{ job.url }}</td>
           <td>{{ job.time_int }} {{ job.time_frame }}</td>
           <td>
+            <button class="button is-secondary " data-url="{% url 'api/job/id' job.id %}" id="copyBtn">Copy URL</button>
             <button class="button is-danger" data-id="{{ job.id }}" onclick="handleDeleteModal(event)">Delete</button>
           </td>
         </tr>
       {% endfor %}
     </tbody>
+
   </table>
+  </div>
 
   <div class="modal" id="deleteModal">
     <div class="modal-background"></div>

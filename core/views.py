@@ -20,11 +20,12 @@ from .models import CustomUser, CacheJob, CacheItem
 def index(request):
     return render(request, "core/index.html")
 
-@login_required
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse("index"))
+
     user = CustomUser.objects.get(id=request.user.id)
     jobs = CacheJob.objects.filter(author=user)
-    print(jobs)
     return render(request, "core/dashboard.html", {
         "jobs": jobs
     })
