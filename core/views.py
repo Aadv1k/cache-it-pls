@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
-
 import json 
 
 import requests
@@ -19,12 +18,17 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    return render(request, "core/dashboard.html")
+    user = CustomUser.objects.get(id=request.user.id)
+    jobs = CacheJob.objects.filter(author=user)
+    print(jobs)
+    return render(request, "core/dashboard.html", {
+        "jobs": jobs
+    })
 
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return redirect(reverse("index"), jobs)
         
 
 def oauth_google(request):
@@ -105,11 +109,31 @@ def api_ep_job(request):
         res = requests.get(url)
         res.raise_for_status() 
     except requests.RequestException as e:
-        return JsonResponse({'error': f'Request to {url} failed: {e}. Check to provide a different, valid URL'}, status=403)
+        return JsonResponse({'error': f'Request to {url} failed: {e}. Check to provide a different, valid URL'}, status=400)
 
-    if res.headers["Content-Type"] != "application/json":
-        return JsonResponse({'error': 'Invalid Content-Type'}, status=415) 
+    if  "application/json" not in res.headers["Content-Type"].lower():
+        return JsonResponse({'error': f'Expected JSON response for {url}, found <code>{res.headers["Content-Type"]}</code>'}, status=415) 
 
-    cache_job = CacheJob.objects.create(url=url, time_int=time_int, time_frame=time_frame)
+    if CacheJob.objects.filter(url=url).exists():
+        return JsonResponse({'error': 'The URL already exists, and is being cached. You should edit it instead'}, status=400)
+
+    cache_job = CacheJob.objects.create(author=request.user, url=url, time_int=time_int, time_frame=time_frame)
 
     return JsonResponse({'message': 'Job created successfully', 'job_id': cache_job.id})
+
+
+
+
+def api_single_ep_job(request, id):
+    try:
+        api_instance = CacheJob.objects.get(id=id)
+    except CacheJob.DoesNotExist:
+        return JsonResponse({'error': 'API not found.'}, status=404)
+
+    if request.method == "DELETE":
+        # Perform the deletion
+        api_instance.delete()
+
+        return JsonResponse({'message': 'API successfully deleted.'})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=400)

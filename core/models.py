@@ -13,7 +13,7 @@ time_units_cust = tuple([(x, x[0].upper) for x in settings.TIME_UNITS])
 
 class CacheJob(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    public_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     url = models.TextField()
     time_int = models.IntegerField()
