@@ -5,13 +5,17 @@ from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
+from .services.job_runner import JobRunner
+
+job_runner = JobRunner()
+
 import json 
 
 import requests
 
 from django.conf import settings
 
-from .models import CustomUser, CacheJob
+from .models import CustomUser, CacheJob, CacheItem
 
 def index(request):
     return render(request, "core/index.html")
@@ -28,7 +32,7 @@ def dashboard(request):
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-    return redirect(reverse("index"), jobs)
+    return redirect(reverse("index"))
         
 
 def oauth_google(request):
@@ -119,10 +123,10 @@ def api_ep_job(request):
 
     cache_job = CacheJob.objects.create(author=request.user, url=url, time_int=time_int, time_frame=time_frame)
 
+    job_runner.execute_job(cache_job)
+    job_runner.schedule_job(cache_job)
+
     return JsonResponse({'message': 'Job created successfully', 'job_id': cache_job.id})
-
-
-
 
 def api_single_ep_job(request, id):
     try:
@@ -131,9 +135,11 @@ def api_single_ep_job(request, id):
         return JsonResponse({'error': 'API not found.'}, status=404)
 
     if request.method == "DELETE":
-        # Perform the deletion
         api_instance.delete()
-
         return JsonResponse({'message': 'API successfully deleted.'})
+    elif request.method == "GET":
+        latest_cache = CacheItem.objects.filter(owner=api_instance).order_by("timestamp").first()
+        print(latest_cache)
+        return JsonResponse(latest_cache.data, status=200)
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=400)
