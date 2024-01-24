@@ -14,7 +14,7 @@
 
 <body class="container">
   {% block nav %}
-<nav class="navbar px-4 is-dark" role="navigation" aria-label="main navigation">
+<nav class="navbar px-4 is-transparent" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item is-size-5 has-text-weight-semibold" href="{% url 'index' %}">Cache it pls!</a>
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
@@ -33,7 +33,7 @@
           <a class="button is-secondary" href="{% url 'dashboard' %}">Dashboard</a>
         </div>
         {% else %}
-        <a class="button is-primary is-dark" href="{% url 'oauth_google' %}">
+        <a class="button is-primary is-primary" href="{% url 'oauth_google' %}">
           <span class="icon is-small">
             <img alt="google" class="image is-16x16" src="{% static 'core/google-color-icon.svg' %}" />
           </span>
