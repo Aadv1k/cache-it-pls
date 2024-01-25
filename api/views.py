@@ -2,22 +2,17 @@ from core.services.job_runner import JobRunner
 from core.models import CacheJob, CacheItem
 
 import json
+import requests
 
 from django.http import JsonResponse
 
 job_runner = JobRunner()
 
-def handle_create_job(request):
+def handle_job(request):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Unauthorized'}, status=401) 
 
-    if request.method != "POST":
-        return JsonResponse({'error': 'Invalid method'}, status=405)
-
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    data = json.loads(request.body)
 
     url = data.get("url")
     time_int = data.get("time_int")

@@ -29,8 +29,7 @@ function handleEditModalFormSubmit(event) {
 
     try {
         const parsedURL = new URL(rawURL);
-        console.log(rawURL, timeFrame, timeNumeral, csrfToken);
-        fetch("/api/job", {
+        fetch("/api/job/", {
             headers: {
                 "X-CSRFToken": csrfToken,
                 "Content-Type": "application/json"

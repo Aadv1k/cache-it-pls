@@ -32,7 +32,7 @@
           <td>{{ job.url }}</td>
           <td>{{ job.time_int }} {{ job.time_frame }}</td>
           <td>
-            <button class="button is-secondary " data-url="{% url 'api/job/id' job.id %}" id="copyBtn">Copy URL</button>
+            <button class="button is-secondary " data-url="/api/job/{{ job.id }}" id="copyBtn">Copy URL</button>
             <button class="button is-danger" data-id="{{ job.id }}" onclick="handleDeleteModal(event)">Delete</button>
           </td>
         </tr>
