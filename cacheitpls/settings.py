@@ -54,15 +54,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cacheitpls.wsgi.application'
 
 
-print(os.getenv("KOYEB_PG_PASSWORD"))
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'koyebdb',
-        'USER': 'koyeb-adm',
-        'PASSWORD': os.getenv("KOYEB_PG_PASSWORD"),
-        'HOST': 'ep-sparkling-boat-60387283.us-east-1.pg.koyeb.app',
-        'OPTIONS': {'sslmode': 'require'},
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
