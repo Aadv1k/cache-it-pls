@@ -5,10 +5,11 @@ import os
 
 from warnings import warn
 
+dotenv.load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-SECRET_KEY = 'django-insecure-1_5^4-mv1j5uka0p!5958lp8dy7$a@_7k8(&+u6k$q_$h7*#c9'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = True
 ALLOWED_HOSTS = []
 
@@ -53,10 +54,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'cacheitpls.wsgi.application'
 
 
+print(os.getenv("KOYEB_PG_PASSWORD"))
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'koyebdb',
+        'USER': 'koyeb-adm',
+        'PASSWORD': os.getenv("KOYEB_PG_PASSWORD"),
+        'HOST': 'ep-sparkling-boat-60387283.us-east-1.pg.koyeb.app',
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
@@ -85,8 +91,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-dotenv.load_dotenv()
 
 GOOGLE_OAUTH_CLIENT_ID = os.getenv("GOOGLE_OAUTH_CLIENT_ID")
 GOOGLE_OAUTH_CLIENT_SECRET = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
