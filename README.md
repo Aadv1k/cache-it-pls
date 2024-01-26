@@ -1,6 +1,6 @@
 # Cache it pls!
 
-- [Quickstart](#quickstart)
+- [Setup](#setup)
 - [Distinctiveness and Complexity](#distinctiveness-and-complexity)
 - [How it works](#how-it-works)
 - [Breakdown of the code](#code)
@@ -8,28 +8,39 @@
   - [Core](#core)
   - [OAuth](#oauth)
   - [Rest API](#rest-api)
+- [Demo](#demo)
 
 Turn your rate-limited APIs into unlimited cached APIs through a dead-simple UI.
 
 > This is alo Aadvik's CS50w's final project!
 
-## Quickstart
+## Setup
 
-Build the enviorment 
+**Accquire necessary environment variables**
+
+```env
+GOOGLE_OAUTH_CALLBACK_URL = "http://localhost:8000/oauth/google/callback"
+
+GOOGLE_OAUTH_CLIENT_ID = "your_client_id"
+GOOGLE_OAUTH_CLIENT_SECRET = "your_client_secret"
+```
+
+To accquire these go to [Google cloud console](https://console.cloud.google.com)
+
+**Build the enviorment**
 
 ```powershell
 python -m venv env
 .\env\Scripts\Activate.ps1
 ```
 
-Run the application
+**Run the application**
 
 ```powershell
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-
 
 ## Distinctiveness and Complexity
 
