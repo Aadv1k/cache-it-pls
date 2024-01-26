@@ -1,4 +1,4 @@
-# Cache it pls!
+https://github.com/Aadv1k/cache-it-pls/assets/81357878/7c96af7e-3ab1-4eaa-aaab-fdff5113d4e0
 
 - [Setup](#setup)
 - [Distinctiveness and Complexity](#distinctiveness-and-complexity)
@@ -8,7 +8,6 @@
   - [Core](#core)
   - [OAuth](#oauth)
   - [Rest API](#rest-api)
-- [Demo](#demo)
 
 Turn your rate-limited APIs into unlimited cached APIs through a dead-simple UI.
 
@@ -123,3 +122,4 @@ This API is responsible for controlling the client-facing actions for a cache jo
 returns the last cached JSON field
 
 **No Body**
+
